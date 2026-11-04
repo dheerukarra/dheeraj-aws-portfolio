@@ -1,9 +1,10 @@
 import type { NextConfig } from "next";
 
+// Static export so AWS Amplify Hosting serves ./out through CloudFront.
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  output: "export",
+  trailingSlash: true,
+  images: { unoptimized: true },
   turbopack: {
     rules: {
       "*.css": {
