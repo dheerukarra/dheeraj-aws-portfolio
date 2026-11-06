@@ -103,12 +103,14 @@ function build(el) {
   const ray = new THREE.Raycaster(), mouse = new THREE.Vector2(); let mx = 0, my = 0, over = false, hintOff = false;
   box.addEventListener('pointermove', (e) => { const r = cvs.getBoundingClientRect(); mx = ((e.clientX - r.left) / r.width) * 2 - 1; my = -(((e.clientY - r.top) / r.height) * 2 - 1); mouse.set(mx, my); ray.setFromCamera(mouse, cam); over = ray.intersectObject(front).length > 0; if (over && !hintOff) { hintOff = true; hint.style.opacity = 0; } }, { passive: true });
   box.addEventListener('pointerleave', () => { over = false; mx = my = 0; });
+  box.addEventListener('pointerdown', (e) => box.dispatchEvent(new PointerEvent('pointermove', { clientX: e.clientX, clientY: e.clientY })), { passive: true });
+  box.addEventListener('pointerup', (e) => { if (e.pointerType !== 'mouse') { over = false; mx = my = 0; } }); box.addEventListener('pointercancel', () => { over = false; mx = my = 0; });
   let tOpen = 0, closing = false, tClose = 0, lift = 0;
   const clock = new THREE.Clock();
   const frame = () => {
-    raf = requestAnimationFrame(frame); const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+    raf = requestAnimationFrame(frame); const raw = clock.getDelta(), dt = Math.min(raw, 0.05), t = clock.elapsedTime;
     let p, show;
-    if (RM) { p = 1; show = closing ? 0 : 1; } else if (!closing) { tOpen += dt; p = clamp(tOpen / 1.9, 0, 1); show = clamp((tOpen - 1.55) / 0.7, 0, 1); } else { tClose += dt; show = clamp(1 - tClose / 0.45, 0, 1); p = clamp(1 - (tClose - 0.2) / 1.2, 0, 1); }
+    if (RM) { p = 1; show = closing ? 0 : 1; } else if (!closing) { tOpen += raw; p = clamp(tOpen / 1.9, 0, 1); show = clamp((tOpen - 1.55) / 0.7, 0, 1); } else { tClose += raw; show = clamp(1 - tClose / 0.45, 0, 1); p = clamp(1 - (tClose - 0.2) / 1.2, 0, 1); }
     pm.uniforms.uP.value = p; pm.uniforms.uAlpha.value = clamp(1 - show * 1.1, 0, 1) * (closing ? 1 : 1) + (closing && show > 0 ? 0 : 0);
     frontM.uniforms.uA.value = backM.uniforms.uA.value = show; slabM.opacity = show; outM.opacity = show * 0.9; coreM.opacity = show; w1M.opacity = show * 0.85; w2M.opacity = show * 0.7; glowM.opacity = show * (0.35 + lift * 0.4);
     lift += ((over ? 1 : 0) - lift) * Math.min(1, dt * 6);
@@ -138,6 +140,9 @@ export function openStory(k = 0) {
   text.hidden = true; btn.setAttribute('aria-expanded', 'false'); btn.textContent = 'Read as text';
   if (!btn.dataset.bound) { btn.dataset.bound = '1'; btn.addEventListener('click', () => { const open = text.hidden; text.hidden = !open; btn.setAttribute('aria-expanded', String(open)); btn.textContent = open ? 'Hide the text' : 'Read as text'; requestAnimationFrame(() => S && S.size()); }); }
   if (!S) S = build(el);
+  // touch devices have no hover: say "touch" instead and let a finger on the card count as the pointer
+  const touch = matchMedia('(hover: none)').matches;
+  el.querySelector('#sy-verb').textContent = touch ? 'touch' : 'hover'; el.querySelector('.sy-hint').textContent = touch ? 'touch and drag the card' : 'hover the card';
   showOvl(el, () => { cancelAnimationFrame(raf); raf = 0; }, { ms: S.RM ? 0 : 1700, run: () => S.dissolve() });
   if (history.replaceState) history.replaceState(null, '', '#' + ['about', 'superpowers', 'projects'][k]);
   requestAnimationFrame(() => { S.start(); if (location.hash && location.hash !== '#about') { /* a direct link to a section shows the text for it */ } });

@@ -49,6 +49,8 @@ The home screen is a glass globe with a glowing core: a literal model of everyth
 | Click a region of the home globe | The model breaks and you fly into that scene |
 | Press <kbd>Ctrl</kbd> + <kbd>K</kbd> | A command palette: jump anywhere, run tools, open links |
 | Press <kbd>~</kbd> | A tiny terminal (`help`, `ls`, `cat`, `enter`, `break`, `heal`, `git`, `test`, `badges`) |
+| Click **Model card** in the header (or open `#about`, `#superpowers`, `#projects`) | A holographic card that assembles from pixel particles. Hover to lift it and let it float, or press *Read as text* for About me, Superpowers and Projects as plain text |
+| Click **Built on AWS** in the header (or open `#aws`) | A full-screen 3D deploy pipeline: a commit goes from GitHub to AWS Amplify Hosting to the CDN to the live page |
 | Run the **self-test suite** | Twelve real checks (links, accessibility names, contrast, WebGL, load time) executed live in *your* browser |
 | Open **Career as a git log** | My timeline as commits. Click one to check it out and watch the model rewind to what existed then |
 | Make a **fault-injector card** | A shareable PNG, drawn on your device and never uploaded |
@@ -121,6 +123,9 @@ public/
 ├── scenes10.js     Hobby
 ├── ui.js           badges, command palette, terminal
 ├── tools.js        git log, self-test suite, card maker, clip recorder
+├── ovl.js          shared behaviour of the full-screen overlays (focus trap, Esc, pause the globe)
+├── story.js        the model card overlay (particle assemble and dissolve, hover float)
+├── deploy.js       the Built on AWS deploy pipeline overlay
 ├── compass.js      the navigation globe
 ├── fxtext.js       typed text, cursor, icons
 ├── icons.json      brand icon paths for the 3D logos
