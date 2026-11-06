@@ -1,5 +1,5 @@
 // UI systems: explorer badges, command palette (Ctrl+K), terminal (~) that drives the world, shortcuts, Konami.
-import { overlay, closeOverlay, gitLog, patchNotes, selfTest, cardTool, recordClip, reach } from './tools.js';
+import { overlay, closeOverlay, gitLog, patchNotes, awsInfo, selfTest, cardTool, recordClip, reach } from './tools.js';
 
 const $ = (s) => document.querySelector(s);
 export const ACH = {
@@ -111,18 +111,18 @@ export function initUI(app) {
   const go = (i) => { if (app.mode() === 'scene' || app.mode() === 'hub') app.enter(i); };
   const A = {
     sound: () => app.toggleSound(), home: () => app.mode() === 'scene' && app.home(),
-    test: () => selfTest(app), git: () => gitLog(app), patch: patchNotes, card: () => cardTool(app), clip: () => recordClip(app), ach: achList,
+    test: () => selfTest(app), git: () => gitLog(app), patch: patchNotes, aws: awsInfo, card: () => cardTool(app), clip: () => recordClip(app), ach: achList,
     break: (i) => app.mode() === 'hub' && app.breakRegion(i ?? ((Math.random() * app.CL.length) | 0)), heal: () => app.heal(),
   };
   const CMDS = [
     ...app.META.map((m, i) => ({ t: 'Go to ' + m.name, f: () => go(i) })),
-    { t: 'Go home: the model', f: A.home }, { t: 'Career as a git log (time travel)', f: A.git }, { t: 'Patch notes', f: A.patch },
+    { t: 'Go home: the model', f: A.home }, { t: 'Career as a git log (time travel)', f: A.git }, { t: 'Patch notes', f: A.patch }, { t: 'How this site is hosted (AWS)', f: A.aws },
     { t: 'Run the self-test suite on this page', f: A.test }, 
     { t: 'Explorer badges', f: A.ach }, { t: 'Make my fault-injector card', f: A.card }, { t: 'Record a 6 second clip', f: A.clip },
     { t: 'Toggle sound', f: A.sound }, { t: 'Open the terminal', f: () => term(true) },
     { t: 'Email Dheeraj', f: () => hello() },
     { t: 'LinkedIn', f: () => window.open('https://www.linkedin.com/in/dheeraj-reddy-karra', '_blank', 'noopener') },
-    { t: 'GitHub', f: () => window.open('https://github.com/dheerukarra', '_blank', 'noopener') },
+    { t: 'GitHub', f: () => window.open('https://github.com/dheerukarra/dheeraj-aws-portfolio', '_blank', 'noopener') },
   ];
 
   const pal = document.createElement('div'); pal.id = 'pal'; pal.innerHTML = '<div class="pbox"><button class="px" id="pclose" aria-label="Close command palette">\u00d7</button><div class="psearch"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="pin" placeholder="Type a command or a place…" autocomplete="off" aria-label="Command palette"></div><ul id="pls"></ul><div class="pfoot"><span><kbd>↑↓</kbd> move</span><span><kbd>↵</kbd> run</span><span><kbd>esc</kbd> close</span><span><kbd>~</kbd> terminal</span></div></div>'; document.body.appendChild(pal);
@@ -143,7 +143,7 @@ export function initUI(app) {
   const term = (on) => { if (on && app.mode() !== 'hub') return; T.classList.toggle('on', on); if (on) { app.achieve('terminal'); if (!$('#tout').children.length) out('model shell v1 · type <b>help</b>', 'mute'); setTimeout(() => $('#tcmd').focus(), 40); } };
   const region = (s) => SCENES[(s || '').toLowerCase().replace(/[^a-z]/g, '')];
   const CMD = {
-    help: () => out('whoami · ls · cat &lt;region&gt; · enter &lt;edu|ai|projects|qa|skills|hobby&gt; · home · break [region] · heal · git · patch · test · sound · card · clip · badges · clear · exit'),
+    help: () => out('whoami · ls · cat &lt;region&gt; · enter &lt;edu|ai|projects|qa|skills|hobby&gt; · home · break [region] · heal · git · patch · aws · test · sound · card · clip · badges · clear · exit'),
     whoami: () => out('Dheeraj Reddy Karra · M.S. Data Science and AI · automation tester turned AI engineer'),
     ls: () => out('education/ \u00a0ai-agents/ \u00a0projects/ \u00a0testing/ \u00a0skills-and-certifications/ \u00a0hobby/'),
     cat: (a) => { const i = region(a); if (i === undefined) out('cat: no such region. try: edu ai projects qa skills hobby', 'bad'); else out(app.META[i].body); },
@@ -151,7 +151,7 @@ export function initUI(app) {
     home: () => { A.home(); out('back at the model'); },
     break: (a) => { if (app.mode() !== 'hub') return out('break works from the model view. type: home', 'bad'); const i = region(a); A.break(i !== undefined && i < 4 ? i : undefined); out('fault injected'); },
     heal: () => { A.heal(); out('retraining… loss falling'); },
-    git: () => { term(false); A.git(); }, patch: () => { term(false); A.patch(); }, test: () => { term(false); A.test(); },
+    git: () => { term(false); A.git(); }, patch: () => { term(false); A.patch(); }, aws: () => { term(false); A.aws(); }, test: () => { term(false); A.test(); },
     sound: () => A.sound(), card: () => { term(false); A.card(); }, clip: () => { term(false); A.clip(); }, ach: () => { term(false); A.ach(); }, badges: () => { term(false); A.ach(); },
     clear: () => { $('#tout').innerHTML = ''; }, exit: () => term(false),
   };

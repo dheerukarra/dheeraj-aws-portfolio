@@ -48,6 +48,17 @@ export function patchNotes() {
   overlay('What changed in the model', `<div class="patch">${html}</div>`, false, 'Patch notes');
 }
 
+// ---------------------------------------------------------------- how this site is hosted (AWS)
+export function awsInfo() {
+  const row = (title, text) => `<section class="pn"><div class="pn-h"><span class="pn-v">${title}</span></div><ul><li><span>${text}</span></li></ul></section>`;
+  overlay('How this site is hosted', `<div class="patch">${
+    row('Hosting', 'AWS Amplify Hosting in us-east-1. The site is served over HTTPS through the Amplify CDN.')
+    + row('Deploys', 'Amplify is connected to the public GitHub repo. Every push to the main branch redeploys the site automatically.')
+    + row('Build', 'None. The site is plain static files (HTML and JavaScript). <code>amplify.yml</code> publishes the <code>public/</code> folder as is.')
+    + row('Source', '<a href="https://github.com/dheerukarra/dheeraj-aws-portfolio" target="_blank" rel="noopener" style="color:var(--acc)">github.com/dheerukarra/dheeraj-aws-portfolio</a>')
+  }</div>`, false, 'Built on AWS');
+}
+
 // ---------------------------------------------------------------- live self-test (real checks)
 const lum = (hex) => { const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4))); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
 const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };

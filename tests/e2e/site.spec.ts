@@ -269,6 +269,24 @@ test.describe('6. Command palette and tools', () => {
     await page.keyboard.press('Escape')
   })
 
+  test('"How this site is hosted" documents AWS Amplify and links to the repo (palette and terminal)', async ({ page }) => {
+    await boot(page)
+    await run(page, 'hosted')
+    await expect(page.locator('#ov .pn')).toHaveCount(4)
+    await expect(page.locator('#ov')).toContainText('AWS Amplify Hosting')
+    await expect(page.locator('#ov a[href="https://github.com/dheerukarra/dheeraj-aws-portfolio"]')).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(page.locator('#ov')).not.toHaveClass(/on/)
+    await page.keyboard.press('~')
+    await page.locator('#tcmd').fill('aws'); await page.keyboard.press('Enter')
+    await expect(page.locator('#ov')).toContainText('us-east-1')
+  })
+
+  test('header GitHub link points at the repo', async ({ page }) => {
+    await boot(page)
+    await expect(page.locator('header a', { hasText: 'GitHub' })).toHaveAttribute('href', 'https://github.com/dheerukarra/dheeraj-aws-portfolio')
+  })
+
   test('fault-injector card is drawn locally and downloadable', async ({ page }) => {
     await boot(page)
     await run(page, 'fault-injector')
