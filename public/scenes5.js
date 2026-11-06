@@ -80,12 +80,14 @@ function globeScene(HALVES, BASE, HINT) {
       const h = pick(lastP); if (!h) { sp.burst(new THREE.Vector3(0, 0, 0), MS_COL, 60, 4); return; }
       const idx = shards.findIndex((s) => s.m === h.object), ci = shards[idx].c, now = performance.now() / 1000;
       brokeAt = now; sp.burst(group.worldToLocal(h.point.clone()), HALVES[ci].col, 220, 8);
+      window.__app.sfxBreak && window.__app.sfxBreak(); // same glass-break sound as the home globe
       for (const s of shards) {
         if (s.c !== ci) continue;
         s.free = true; s.delay = 1e12; s.vel.copy(s.nrm).multiplyScalar(2.5 + Math.random() * 5).add(new THREE.Vector3((Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2));
         s.ang.set((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 8, (Math.random() - 0.5) * 8);
       }
       setTimeout(() => window.__app.enter(BASE + ci), 650);
+      return 'break'; // tells main.js not to also play the small click tick
     },
     update(t, dt, p) {
       lastP = p; lastUpd = performance.now(); bind(); const now = lastUpd / 1000;

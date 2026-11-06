@@ -122,12 +122,15 @@ function fit() { R.setSize(innerWidth, innerHeight); comp.setSize(innerWidth, in
 addEventListener('resize', fit); fit();
 
 // ---------- sound (synthesised) ----------
-let ac = null, soundOn = false, master = null;
-$('snd').onclick = () => {
-  soundOn = !soundOn; $('snd').textContent = soundOn ? 'Sound on' : 'Sound off';
-  if (soundOn && !ac) { ac = new (window.AudioContext || window.webkitAudioContext)(); master = ac.createGain(); master.connect(ac.destination); }
-  if (ac) ac.resume(); if (master) master.gain.value = soundOn ? 0.9 : 0;
+let ac = null, soundOn = true, master = null; // sound is on by default; browsers only allow audio after a first click or key press
+const startAudio = () => {
+  if (ac && ac.state === 'running') return;
+  if (!ac) { ac = new (window.AudioContext || window.webkitAudioContext)(); master = ac.createGain(); master.connect(ac.destination); }
+  ac.resume(); master.gain.value = soundOn ? 0.9 : 0;
 };
+$('snd').textContent = 'Sound on';
+$('snd').onclick = () => { soundOn = !soundOn; $('snd').textContent = soundOn ? 'Sound on' : 'Sound off'; startAudio(); if (master) master.gain.value = soundOn ? 0.9 : 0; };
+['pointerdown', 'keydown'].forEach((ev) => addEventListener(ev, startAudio));
 function sfxBreak() { if (!soundOn || !ac) return; const len = ac.sampleRate * 0.7, buf = ac.createBuffer(1, len, ac.sampleRate), d = buf.getChannelData(0); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.2);
   const s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain(); s.buffer = buf; f.type = 'highpass'; f.frequency.value = 2200; g.gain.value = 0.5; s.connect(f); f.connect(g); g.connect(master); s.start();
   const o = ac.createOscillator(), og = ac.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(140, ac.currentTime); o.frequency.exponentialRampToValueAtTime(40, ac.currentTime + 0.6); og.gain.setValueAtTime(0.5, ac.currentTime); og.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.7); o.connect(og); og.connect(master); o.start(); o.stop(ac.currentTime + 0.8); }
@@ -240,7 +243,7 @@ let down = null;
 cv.addEventListener('pointerdown', (e) => { down = [e.clientX, e.clientY]; });
 cv.addEventListener('pointerup', (e) => {
   if (!down) return; const moved = Math.hypot(e.clientX - down[0], e.clientY - down[1]); down = null; if (moved > 6) return;
-  if (mode === 'scene') { SC[cur].click(); if (SC[cur].detail) renderDetail(cur); sfxTick(); return; }
+  if (mode === 'scene') { const r = SC[cur].click(); if (SC[cur].detail) renderDetail(cur); if (r !== 'break') sfxTick(); return; }
   if (mode !== 'hub') return;
   mouse.set((e.clientX / innerWidth) * 2 - 1, -((e.clientY / innerHeight) * 2 - 1)); ray.setFromCamera(mouse, cam);
   const hit = ray.intersectObjects(group.children, false)[0]; if (!hit) return;
@@ -282,7 +285,7 @@ const app = {
   mode: () => mode, enter: (i) => { if (mode === 'scene' || mode === 'hub') enter(i); }, home: () => { if (mode === 'scene') transition(toHub, '#ff6a1f', 'The model'); },
   breakRegion: (ci) => { if (mode !== 'hub') return; inject(CL[ci].v.clone().multiplyScalar(RAD).applyQuaternion(group.quaternion), ci); window.dispatchEvent(new CustomEvent('ach', { detail: 'fault' })); },
   heal: () => { const t = performance.now() / 1000; for (const s of shards) { s.free = true; s.delay = t; } loss = Math.min(loss, 0.1); },
-  toggleSound: () => $('snd').click(),
+  toggleSound: () => $('snd').click(), sfxBreak,
   setActive: (arr) => { CL.forEach((c, i) => { regionOn[i] = !!arr[i]; }); },
 };
 window.__app = app;
