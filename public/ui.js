@@ -125,7 +125,7 @@ export function initUI(app) {
     { t: 'GitHub', f: () => window.open('https://github.com/dheerukarra', '_blank', 'noopener') },
   ];
 
-  const pal = document.createElement('div'); pal.id = 'pal'; pal.innerHTML = '<div class="pbox"><button class="px" id="pclose" aria-label="Close command palette">\u00d7</button><div class="psearch"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="pin" placeholder="Type a command or a place…" autocomplete="off" aria-label="Command palette"></div><ul id="pls"></ul><div class="pfoot"><span><kbd>↑↓</kbd> move</span><span><kbd>↵</kbd> run</span><span><kbd>esc</kbd> close</span><span><kbd>1-5</kbd> jump</span><span><kbd>~</kbd> terminal</span></div></div>'; document.body.appendChild(pal);
+  const pal = document.createElement('div'); pal.id = 'pal'; pal.innerHTML = '<div class="pbox"><button class="px" id="pclose" aria-label="Close command palette">\u00d7</button><div class="psearch"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="pin" placeholder="Type a command or a place…" autocomplete="off" aria-label="Command palette"></div><ul id="pls"></ul><div class="pfoot"><span><kbd>↑↓</kbd> move</span><span><kbd>↵</kbd> run</span><span><kbd>esc</kbd> close</span><span><kbd>~</kbd> terminal</span></div></div>'; document.body.appendChild(pal);
   $('#pclose').addEventListener('click', () => palOpen(false));
   let sel = 0, list = CMDS;
   const kind = (t) => (/^Go /.test(t) ? ['→', 'go'] : /^(Email|LinkedIn|GitHub)/.test(t) ? ['↗', 'ext'] : /badges/i.test(t) ? ['◆', 'bdg'] : ['▶', 'act']);
@@ -173,7 +173,6 @@ export function initUI(app) {
     if (ki === KON.length) { ki = 0; app.toast('Old school. +30 lives.'); app.achieve('konami'); return; }
     if (e.key === '`' || e.key === '~') { e.preventDefault(); term(true); }
     else if (e.key === '/' || e.key === '?') { e.preventDefault(); palOpen(true); }
-    else if (/^[1-6]$/.test(e.key)) go(+e.key - 1);
     else if (e.key === ' ' && app.mode() === 'hub') { e.preventDefault(); A.break(); }
     else if (e.key.toLowerCase() === 'h') A.heal();
   });

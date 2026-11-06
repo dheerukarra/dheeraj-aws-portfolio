@@ -188,7 +188,6 @@ ul.achs li i{display:block;font:400 11px 'JetBrains Mono',monospace;font-style:n
 #panel{left:0;right:0;bottom:0;width:auto;padding:46px 126px 20px 18px;background:linear-gradient(transparent,rgba(5,7,11,.94) 26%)}#panel .num{font-size:54px}#panel h2{font-size:26px;margin-top:8px}#panel p{font-size:13px;line-height:1.5;margin-top:8px}#panel .tags{display:none}#panel .nav{flex-wrap:wrap}#panel button{padding:9px 12px;font-size:11px}header{padding:14px 14px;font-size:10px}header nav{gap:12px}header nav button,header nav a,header>a{white-space:nowrap}#palb{display:none}}
 @media(prefers-reduced-motion:reduce){.tape .track{animation:none}.ch{animation:none!important}.hint,#panel .hintline{animation:none}*{scroll-behavior:auto}}
 
-.travel{margin-top:14px;font:500 11px 'JetBrains Mono',monospace;letter-spacing:.12em;color:var(--mute)}
 
 #ptabs{position:fixed;top:60px;left:50%;transform:translateX(-50%);z-index:6;display:none;gap:2px;border:1px solid #232a38;border-radius:30px;background:rgba(5,7,11,.82);backdrop-filter:blur(8px);padding:4px}
 #ptabs.on{display:flex}
@@ -358,7 +357,7 @@ ul.tests li i{margin-left:auto;color:#9aa3b8;font:400 11px 'JetBrains Mono',mono
 <div class="ro" id="ro"></div><div class="tape" id="tape"></div>
 <div class="hint" id="hint">Click a region &middot; drag to orbit</div>
 <div class="hud"><div>LOSS <b id="loss">0.031</b> &nbsp; EPOCH <b id="ep">0</b></div><canvas id="curve" width="420" height="112"></canvas><div id="rows"></div></div>
-<div id="panel"><div class="num" id="pnum"></div><h2 id="pname"></h2><p id="pbody"></p><div class="tags" id="ptags"></div><div class="hintline" id="phint"></div><div class="stat" id="pstat"></div><div class="nav"><button id="act" style="display:none"></button></div><div class="travel">Hover the orb in the corner to pick a region, or spin it, or press 1 to 5</div></div>
+<div id="panel"><div class="num" id="pnum"></div><h2 id="pname"></h2><p id="pbody"></p><div class="tags" id="ptags"></div><div class="hintline" id="phint"></div><div class="stat" id="pstat"></div><div class="nav"><button id="act" style="display:none"></button></div></div>
 <div id="ptabs" role="tablist" aria-label="Projects"></div>
 <div id="compass" role="application" aria-label="Region compass. Drag the orb to travel between scenes."></div>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
