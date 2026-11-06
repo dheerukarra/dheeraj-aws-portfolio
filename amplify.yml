@@ -1,17 +1,10 @@
 version: 1
 frontend:
   phases:
-    preBuild:
-      commands:
-        - npm ci
     build:
       commands:
-        - npm run build
+        - echo "Static site: public/ is served as-is, nothing to build"
   artifacts:
-    baseDirectory: out
+    baseDirectory: public
     files:
       - '**/*'
-  cache:
-    paths:
-      - node_modules/**/*
-      - .next/cache/**/*
