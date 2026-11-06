@@ -3,7 +3,7 @@ frontend:
   phases:
     build:
       commands:
-        - echo "Static site: public/ is served as-is, nothing to build"
+        - echo "Static site, nothing to build"
   artifacts:
     baseDirectory: public
     files:
