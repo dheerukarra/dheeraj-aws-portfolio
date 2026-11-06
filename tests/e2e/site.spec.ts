@@ -272,8 +272,9 @@ test.describe('6. Command palette and tools', () => {
   test('"How this site is hosted" documents AWS Amplify and links to the repo (palette and terminal)', async ({ page }) => {
     await boot(page)
     await run(page, 'hosted')
-    await expect(page.locator('#ov .pn')).toHaveCount(4)
-    await expect(page.locator('#ov')).toContainText('AWS Amplify Hosting')
+    await expect(page.locator('#ov .aws-node')).toHaveCount(4)
+    await expect(page.locator('#ov')).toContainText('AWS Amplify')
+    await expect(page.locator('#ov .aws-code')).toContainText('baseDirectory')
     await expect(page.locator('#ov a[href="https://github.com/dheerukarra/dheeraj-aws-portfolio"]')).toBeVisible()
     await page.keyboard.press('Escape')
     await expect(page.locator('#ov')).not.toHaveClass(/on/)

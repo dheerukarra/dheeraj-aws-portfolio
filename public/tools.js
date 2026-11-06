@@ -50,13 +50,21 @@ export function patchNotes() {
 
 // ---------------------------------------------------------------- how this site is hosted (AWS)
 export function awsInfo() {
-  const row = (title, text) => `<section class="pn"><div class="pn-h"><span class="pn-v">${title}</span></div><ul><li><span>${text}</span></li></ul></section>`;
-  overlay('How this site is hosted', `<div class="patch">${
-    row('Hosting', 'AWS Amplify Hosting in us-east-1. The site is served over HTTPS through the Amplify CDN.')
-    + row('Deploys', 'Amplify is connected to the public GitHub repo. Every push to the main branch redeploys the site automatically.')
-    + row('Build', 'None. The site is plain static files (HTML and JavaScript). <code>amplify.yml</code> publishes the <code>public/</code> folder as is.')
-    + row('Source', '<a href="https://github.com/dheerukarra/dheeraj-aws-portfolio" target="_blank" rel="noopener" style="color:var(--acc)">github.com/dheerukarra/dheeraj-aws-portfolio</a>')
-  }</div>`, false, 'Built on AWS');
+  const ic = (d) => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  const node = (c, icon, t, s, tag) => `<div class="aws-node" style="--c:${c}"><span class="aws-ico">${ic(icon)}</span><b>${t}</b><small>${s}</small><em>${tag}</em></div>`;
+  const wire = (d) => `<div class="aws-wire" style="--d:${d}s"><span></span></div>`;
+  const flow = node('#f4efe7', '<circle cx="6" cy="6" r="2.4"/><circle cx="6" cy="18" r="2.4"/><circle cx="18" cy="9" r="2.4"/><path d="M6 8.4v7.2M18 11.4c0 4-6 2.6-10.4 5"/>', 'GitHub', 'public repo, main branch', 'git push')
+    + wire(0) + node('#ff9900', '<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/>', 'AWS Amplify', 'Hosting in us-east-1', 'auto deploy')
+    + wire(0.5) + node('#5ec8ff', '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>', 'Amplify CDN', 'served over HTTPS', 'global')
+    + wire(1) + node('#7bd88f', '<path d="M5 3l14 8-6 1.8L10.5 19z"/>', 'You', 'this page, right now', 'live');
+  const stat = (n, l) => `<div class="aws-stat"><b>${n}</b><span>${l}</span></div>`;
+  const code = [['version', ': 1'], ['frontend', ':'], ['  phases', ':'], ['    build', ':'], ['      commands', ':'], ['        - ', '<s>echo "Static site, nothing to build"</s>'], ['  artifacts', ':'], ['    baseDirectory', ': <s>public</s>'], ['    files', ':'], ['      - ', "<s>'**/*'</s>"]]
+    .map(([k, v], i) => `<div><u>${i + 1}</u><span><i>${k.replace(/ /g, '&nbsp;')}</i>${v}</span></div>`).join('');
+  overlay('How this site is hosted', `<div class="aws"><p class="aws-lead">Plain static files, deployed straight from GitHub. Nothing to build, nothing to patch, nothing to keep running.</p>
+<div class="aws-flow">${flow}</div>
+<div class="aws-stats">${stat('0', 'build steps')}${stat('1', 'push to deploy')}${stat('HTTPS', 'everywhere')}${stat('0', 'servers to manage')}</div>
+<div class="aws-code"><div class="aws-code-h"><i></i><i></i><i></i><span>amplify.yml</span></div>${code}</div>
+<a class="cg-btn aws-btn" href="https://github.com/dheerukarra/dheeraj-aws-portfolio" target="_blank" rel="noopener">Read the source on GitHub ↗</a></div>`, true, 'Built on AWS');
 }
 
 // ---------------------------------------------------------------- live self-test (real checks)
