@@ -1,0 +1,14 @@
+{
+  "name": "portfolio-e2e",
+  "private": true,
+  "version": "1.0.0",
+  "description": "End-to-end tests for the live portfolio (Playwright, driving the installed Brave browser)",
+  "scripts": {
+    "test": "playwright test",
+    "test:local": "cross-env BASE_URL=http://localhost:3200 playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.49.1",
+    "cross-env": "7.0.3"
+  }
+}

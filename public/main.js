@@ -270,11 +270,11 @@ function endBoot() {
   scramble($('tag'), 'M.S. Data Science and AI · AI engineer · tester by training', { dur: 1500, delay: 500 });
   setTimeout(() => { nameEl.classList.add('on'); setTimeout(() => kin.start(), 2200); }, 900);
 }
+let hoverRegion = -1, hoverPt = null, tiltX = 0, tiltY = 0; // declared before endBoot() can run (the reduced-motion path reaches the cursor label immediately)
 $('skip').onclick = endBoot;
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (q.has('nobook') || q.has('scene') || REDUCED) endBoot(); else typer = typeLines($('bt'), BOOT, 170), typer.then(endBoot);
 cursor($('cur'), () => (mode === 'scene' ? (SC[cur] && SC[cur].cursor ? SC[cur].cursor() : 'run') : mode === 'hub' ? (hoverRegion >= 0 ? 'break · ' + CL[hoverRegion].name : 'drag') : ''));
-let hoverRegion = -1, hoverPt = null, tiltX = 0, tiltY = 0;
 const regionOn = CL.map(() => true);
 cv.addEventListener('pointerleave', () => { hoverRegion = -1; hoverPt = null; });
 const clk = $('clk'); const tick = () => { clk.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }; tick(); setInterval(tick, 1000);
