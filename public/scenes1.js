@@ -28,7 +28,7 @@ export function aiScene() {
     const y = 3.4 - i * 1.7, x = -3.9 + (1 - Math.abs(i - 2) / 2) * 0.8;
     const m = new THREE.Mesh(hexG, new THREE.MeshBasicMaterial({ color: 0x211a40, transparent: true, opacity: 0.95 })); m.rotation.x = Math.PI / 2; m.position.set(x, y, 0); root.add(m);
     const e = wire(hexG, VIO, 0.95); e.rotation.x = Math.PI / 2; e.position.copy(m.position); root.add(e);
-    if (ic) { const lg = logo3d(ic, 0.4, '#ffffff'); lg.position.set(x, y, 0.15); root.add(lg); } else { const t = label(name[0], { size: 0.5, color: '#ffffff', font: '800 72px Syne, sans-serif' }); t.position.set(x, y, 0.15); root.add(t); }
+    if (ic) { const lg = logo3d(ic, 0.4, '#ffffff'); lg.position.set(x, y + 0.4, 0.15); root.add(lg); } else { const t = label(name[0], { size: 0.5, color: '#ffffff', font: '800 72px Syne, sans-serif' }); t.position.set(x, y, 0.15); root.add(t); }
     lbl(name, x, y - 0.85);
     nodes['a' + i] = { m, ring: e, p: m.position.clone(), flash: 0, name };
   });
