@@ -33,7 +33,16 @@ export function initUI(app) {
   app.toast = (html, ach) => { const t = document.createElement('div'); t.className = 'toast' + (ach ? ' ach' : ''); t.innerHTML = html; toasts.appendChild(t); setTimeout(() => t.classList.add('out'), ach ? 4600 : 3200); setTimeout(() => t.remove(), ach ? 5200 : 3800); };
   const TOTAL = Object.keys(ACH).length;
   app.achieve = (k) => { if (got.has(k) || !ACH[k]) return; got.add(k); save('dr_ach', got); achCount(); app.toast(badgeCard(k), true); if (got.size === TOTAL) setTimeout(celebrate, 2400); };
-  app.onScene = (i) => { term(false); palOpen(false); clearTimeout(nudgeT); const N = NUDGE[i]; if (N && !got.has(N[0]) && !nudged.has('s' + i)) nudgeT = setTimeout(() => { if (app.cur() === i && !got.has(N[0])) { nudged.add('s' + i); app.toast(hintCard(N[1]), true); } }, 26000); visited.add(i); save('dr_vis', visited); if ([...visited].filter((v) => v < app.CL.length).length >= app.CL.length) app.achieve('all'); };
+  // one-time coach mark: tell the visitor what the corner globe is for, the first time they step into a scene
+  const compassEl = document.getElementById('compass'); let tipDone = false; try { tipDone = !!localStorage.getItem('dr_navtip'); } catch { /* storage blocked: just show it */ }
+  const endTip = () => { const t = document.getElementById('navtip'); if (t) { t.classList.remove('on'); setTimeout(() => t.remove(), 400); } compassEl && compassEl.classList.remove('nudge'); };
+  const showNavTip = () => {
+    if (tipDone || !compassEl || document.getElementById('navtip')) return; tipDone = true; try { localStorage.setItem('dr_navtip', '1'); } catch { /* ignore */ }
+    const t = document.createElement('div'); t.id = 'navtip'; t.innerHTML = '<b>Navigate</b>Hover or spin this globe to jump to any region'; document.body.appendChild(t);
+    requestAnimationFrame(() => { t.classList.add('on'); compassEl.classList.add('nudge'); });
+    ['pointerenter', 'pointerdown', 'focusin'].forEach((ev) => compassEl.addEventListener(ev, endTip, { once: true })); setTimeout(endTip, 9000);
+  };
+  app.onScene = (i) => { setTimeout(showNavTip, 1200); term(false); palOpen(false); clearTimeout(nudgeT); const N = NUDGE[i]; if (N && !got.has(N[0]) && !nudged.has('s' + i)) nudgeT = setTimeout(() => { if (app.cur() === i && !got.has(N[0])) { nudged.add('s' + i); app.toast(hintCard(N[1]), true); } }, 26000); visited.add(i); save('dr_vis', visited); if ([...visited].filter((v) => v < app.CL.length).length >= app.CL.length) app.achieve('all'); };
   app.stats = () => ({ ach: got.size, visited: visited.size });
   addEventListener('ach', (e) => app.achieve(e.detail));
   reach($('#reach'));

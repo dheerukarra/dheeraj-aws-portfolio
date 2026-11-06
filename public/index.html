@@ -249,6 +249,16 @@ body.in-scene #palb,body.in-scene #termb,body.in-scene #achb{display:none}
 #boot.out{opacity:0;pointer-events:none}
 @media(max-width:900px){header nav a{display:none}.nums{display:none}.hint{display:none}.hud{width:170px;right:14px}.lbl{font-size:10px}.title{bottom:96px}#panel{bottom:18px}#panel p{font-size:14px}#panel .num{font-size:64px}}
 #ov.nofx,#ov.nofx .box{backdrop-filter:none;animation:none}
+/* navigation compass: always-on caption + one-time coach mark */
+#compass::after{content:'Navigate';position:absolute;right:2px;bottom:172px;font:500 10px 'JetBrains Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--mute);pointer-events:none}
+#compass.nudge{opacity:1}
+#compass.nudge::before{content:'';position:absolute;right:0;bottom:26px;width:140px;height:140px;border-radius:50%;border:2px solid var(--acc);box-shadow:0 0 22px rgba(255,106,31,.5);animation:cnudge 1.7s ease-out infinite;pointer-events:none}
+@keyframes cnudge{from{transform:scale(.8);opacity:.95}to{transform:scale(1.28);opacity:0}}
+#navtip{position:fixed;right:16px;bottom:214px;z-index:7;max-width:min(240px,calc(100vw - 32px));padding:12px 15px;border-radius:14px;background:linear-gradient(135deg,rgba(20,26,40,.96),rgba(8,11,18,.97));border:1px solid rgba(255,106,31,.5);box-shadow:0 18px 50px rgba(0,0,0,.55),0 0 28px rgba(255,106,31,.18);font:400 12px/1.5 'JetBrains Mono',monospace;color:#c9ccd6;pointer-events:none;opacity:0;transform:translateX(12px);transition:opacity .4s,transform .5s cubic-bezier(.16,1,.3,1)}
+#navtip.on{opacity:1;transform:none}
+#navtip b{display:block;font:600 10px 'JetBrains Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
+#navtip::after{content:'';position:absolute;right:58px;bottom:-7px;width:12px;height:12px;transform:rotate(45deg);background:#0c1019;border-bottom:1px solid rgba(255,106,31,.5);border-right:1px solid rgba(255,106,31,.5)}
+body:not(.in-scene) #navtip{display:none}
 body.trans .lbl,body.trans #panel,body.trans #ptabs{opacity:0!important}
 /* ---- premium overlays: git log, patch notes, self-test, card, palette, terminal, toast ---- */
 #ov{background:radial-gradient(900px 520px at 50% 30%,rgba(255,106,31,.10),transparent 65%),rgba(3,4,7,.78)}
