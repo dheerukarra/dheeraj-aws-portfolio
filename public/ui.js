@@ -35,14 +35,23 @@ export function initUI(app) {
   app.achieve = (k) => { if (got.has(k) || !ACH[k]) return; got.add(k); save('dr_ach', got); achCount(); app.toast(badgeCard(k), true); if (got.size === TOTAL) setTimeout(celebrate, 2400); };
   // one-time coach mark: tell the visitor what the corner globe is for, the first time they step into a scene
   const compassEl = document.getElementById('compass'); let tipDone = false; try { tipDone = !!localStorage.getItem('dr_navtip'); } catch { /* storage blocked: just show it */ }
-  const endTip = () => { const t = document.getElementById('navtip'); if (t) { t.classList.remove('on'); setTimeout(() => t.remove(), 400); } compassEl && compassEl.classList.remove('nudge'); };
+  const endTip = () => { const t = document.getElementById('navtip'); if (t) { t.classList.remove('on'); setTimeout(() => t.remove(), 400); } if (compassEl) { compassEl.classList.remove('nudge'); compassEl.querySelectorAll('.nring').forEach((r) => r.remove()); } };
+  // the corner globe's canvas changes size with the window, so place the caption, ring and callout from its real size
+  const placeCompassBits = () => { const cvn = compassEl && compassEl.querySelector('canvas'); if (!cvn || !cvn.offsetHeight) return null; compassEl.style.setProperty('--capb', (26 + cvn.offsetHeight + 4) + 'px'); return cvn; };
+  addEventListener('resize', placeCompassBits);
   const showNavTip = () => {
     if (tipDone || !compassEl || document.getElementById('navtip')) return; tipDone = true; try { localStorage.setItem('dr_navtip', '1'); } catch { /* ignore */ }
     const t = document.createElement('div'); t.id = 'navtip'; t.innerHTML = '<b>Navigate</b>Hover or spin this globe to jump to any region'; document.body.appendChild(t);
+    const cvn = placeCompassBits();
+    if (cvn) { // ring hugs the globe, centred on the canvas; callout sits above it with its arrow over the globe's centre
+      const w = Math.round(cvn.offsetWidth * 0.9), ring = document.createElement('div'); ring.className = 'nring';
+      Object.assign(ring.style, { width: w + 'px', height: w + 'px', left: cvn.offsetLeft + (cvn.offsetWidth - w) / 2 + 'px', top: cvn.offsetTop + (cvn.offsetHeight - w) / 2 + 'px' }); compassEl.appendChild(ring);
+      const cr = cvn.getBoundingClientRect(); t.style.bottom = innerHeight - cr.top + 38 + 'px'; t.style.setProperty('--ar', Math.max(14, innerWidth - cr.right + cr.width / 2 - 16 - 6) + 'px');
+    }
     requestAnimationFrame(() => { t.classList.add('on'); compassEl.classList.add('nudge'); });
     ['pointerenter', 'pointerdown', 'focusin'].forEach((ev) => compassEl.addEventListener(ev, endTip, { once: true })); setTimeout(endTip, 9000);
   };
-  app.onScene = (i) => { setTimeout(showNavTip, 1200); term(false); palOpen(false); clearTimeout(nudgeT); const N = NUDGE[i]; if (N && !got.has(N[0]) && !nudged.has('s' + i)) nudgeT = setTimeout(() => { if (app.cur() === i && !got.has(N[0])) { nudged.add('s' + i); app.toast(hintCard(N[1]), true); } }, 26000); visited.add(i); save('dr_vis', visited); if ([...visited].filter((v) => v < app.CL.length).length >= app.CL.length) app.achieve('all'); };
+  app.onScene = (i) => { setTimeout(placeCompassBits, 300); setTimeout(showNavTip, 1200); term(false); palOpen(false); clearTimeout(nudgeT); const N = NUDGE[i]; if (N && !got.has(N[0]) && !nudged.has('s' + i)) nudgeT = setTimeout(() => { if (app.cur() === i && !got.has(N[0])) { nudged.add('s' + i); app.toast(hintCard(N[1]), true); } }, 26000); visited.add(i); save('dr_vis', visited); if ([...visited].filter((v) => v < app.CL.length).length >= app.CL.length) app.achieve('all'); };
   app.stats = () => ({ ach: got.size, visited: visited.size });
   addEventListener('ach', (e) => app.achieve(e.detail));
   reach($('#reach'));
