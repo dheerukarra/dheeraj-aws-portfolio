@@ -1,5 +1,5 @@
 // UI systems: explorer badges, command palette (Ctrl+K), terminal (~) that drives the world, shortcuts, Konami.
-import { overlay, closeOverlay, gitLog, patchNotes, awsInfo, selfTest, cardTool, recordClip, reach } from './tools.js';
+import { overlay, closeOverlay, gitLog, patchNotes, selfTest, cardTool, recordClip, reach } from './tools.js';
 
 const $ = (s) => document.querySelector(s);
 export const ACH = {
@@ -109,14 +109,23 @@ export function initUI(app) {
   achB?.addEventListener('click', () => { if (app.mode() === 'hub') achList(); });
 
   const go = (i) => { if (app.mode() === 'scene' || app.mode() === 'hub') app.enter(i); };
+  // About, Superpowers and Projects live in the model card story; Built on AWS is its own overlay. Both load on first use.
+  const story = (k) => { if (app.mode() === 'hub') import('./story.js').then((m) => m.openStory(k)); };
+  const deploy = () => { if (app.mode() === 'hub') import('./deploy.js').then((m) => m.openDeploy()); };
+  const HASH = { about: () => story(0), superpowers: () => story(1), projects: () => story(2), aws: deploy };
+  const hashGo = () => { const f = HASH[location.hash.slice(1).toLowerCase()]; if (f) f(); };
+  addEventListener('hashchange', hashGo);
+  if (HASH[location.hash.slice(1).toLowerCase()]) { const w = setInterval(() => { if (app.mode() === 'hub') { clearInterval(w); hashGo(); } }, 400); setTimeout(() => clearInterval(w), 120000); }
+  document.getElementById('mcb')?.addEventListener('click', (e) => { e.preventDefault(); story(0); });
+  document.getElementById('awb')?.addEventListener('click', (e) => { e.preventDefault(); deploy(); });
   const A = {
     sound: () => app.toggleSound(), home: () => app.mode() === 'scene' && app.home(),
-    test: () => selfTest(app), git: () => gitLog(app), patch: patchNotes, aws: awsInfo, card: () => cardTool(app), clip: () => recordClip(app), ach: achList,
+    test: () => selfTest(app), git: () => gitLog(app), patch: patchNotes, aws: deploy, card: () => cardTool(app), clip: () => recordClip(app), ach: achList,
     break: (i) => app.mode() === 'hub' && app.breakRegion(i ?? ((Math.random() * app.CL.length) | 0)), heal: () => app.heal(),
   };
   const CMDS = [
     ...app.META.map((m, i) => ({ t: 'Go to ' + m.name, f: () => go(i) })),
-    { t: 'Go home: the model', f: A.home }, { t: 'Career as a git log (time travel)', f: A.git }, { t: 'Patch notes', f: A.patch }, { t: 'How this site is hosted (AWS)', f: A.aws },
+    { t: 'Go home: the model', f: A.home }, { t: 'Career as a git log (time travel)', f: A.git }, { t: 'Patch notes', f: A.patch }, { t: 'Model card: About me', f: () => story(0) }, { t: 'Model card: Superpowers', f: () => story(1) }, { t: 'Model card: Projects', f: () => story(2) }, { t: 'Built on AWS: how this site is hosted', f: A.aws },
     { t: 'Run the self-test suite on this page', f: A.test }, 
     { t: 'Explorer badges', f: A.ach }, { t: 'Make my fault-injector card', f: A.card }, { t: 'Record a 6 second clip', f: A.clip },
     { t: 'Toggle sound', f: A.sound }, { t: 'Open the terminal', f: () => term(true) },
@@ -143,7 +152,7 @@ export function initUI(app) {
   const term = (on) => { if (on && app.mode() !== 'hub') return; T.classList.toggle('on', on); if (on) { app.achieve('terminal'); if (!$('#tout').children.length) out('model shell v1 · type <b>help</b>', 'mute'); setTimeout(() => $('#tcmd').focus(), 40); } };
   const region = (s) => SCENES[(s || '').toLowerCase().replace(/[^a-z]/g, '')];
   const CMD = {
-    help: () => out('whoami · ls · cat &lt;region&gt; · enter &lt;edu|ai|projects|qa|skills|hobby&gt; · home · break [region] · heal · git · patch · aws · test · sound · card · clip · badges · clear · exit'),
+    help: () => out('whoami · ls · cat &lt;region&gt; · enter &lt;edu|ai|projects|qa|skills|hobby&gt; · home · break [region] · heal · git · patch · about · aws · test · sound · card · clip · badges · clear · exit'),
     whoami: () => out('Dheeraj Reddy Karra · M.S. Data Science and AI · automation tester turned AI engineer'),
     ls: () => out('education/ \u00a0ai-agents/ \u00a0projects/ \u00a0testing/ \u00a0skills-and-certifications/ \u00a0hobby/'),
     cat: (a) => { const i = region(a); if (i === undefined) out('cat: no such region. try: edu ai projects qa skills hobby', 'bad'); else out(app.META[i].body); },
@@ -151,7 +160,7 @@ export function initUI(app) {
     home: () => { A.home(); out('back at the model'); },
     break: (a) => { if (app.mode() !== 'hub') return out('break works from the model view. type: home', 'bad'); const i = region(a); A.break(i !== undefined && i < 4 ? i : undefined); out('fault injected'); },
     heal: () => { A.heal(); out('retraining… loss falling'); },
-    git: () => { term(false); A.git(); }, patch: () => { term(false); A.patch(); }, aws: () => { term(false); A.aws(); }, test: () => { term(false); A.test(); },
+    git: () => { term(false); A.git(); }, patch: () => { term(false); A.patch(); }, aws: () => { term(false); A.aws(); }, about: () => { term(false); story(0); }, test: () => { term(false); A.test(); },
     sound: () => A.sound(), card: () => { term(false); A.card(); }, clip: () => { term(false); A.clip(); }, ach: () => { term(false); A.ach(); }, badges: () => { term(false); A.ach(); },
     clear: () => { $('#tout').innerHTML = ''; }, exit: () => term(false),
   };
@@ -166,9 +175,9 @@ export function initUI(app) {
   const typing = () => ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName);
   const KON = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']; let ki = 0;
   addEventListener('keydown', (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); palOpen(true); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); if (!document.body.classList.contains('ovl-open')) palOpen(true); return; }
     if (e.key === 'Escape') { closeOverlay(); document.getElementById('cong')?.remove(); document.getElementById('bdg')?.remove(); return; }
-    if (typing()) return;
+    if (typing() || document.body.classList.contains('ovl-open')) return;
     ki = e.key.toLowerCase() === KON[ki].toLowerCase() ? ki + 1 : e.key === 'ArrowUp' ? 1 : 0;
     if (ki === KON.length) { ki = 0; app.toast('Old school. +30 lives.'); app.achieve('konami'); return; }
     if (e.key === '`' || e.key === '~') { e.preventDefault(); term(true); }

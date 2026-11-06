@@ -298,7 +298,7 @@ const clock = new THREE.Clock(), q0 = new THREE.Quaternion(), eu = new THREE.Eul
 const ease = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
 function frame() {
   // while the boot text types, don't render the 3D scene behind it: it starved the typing and made the intro crawl
-  if (mode === 'boot') { clock.getDelta(); requestAnimationFrame(frame); return; }
+  if (mode === 'boot' || window.__paused) { clock.getDelta(); requestAnimationFrame(frame); return; } // __paused: the full-screen story has its own renderer
   const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime, now = performance.now() / 1000;
   for (const s of shards) {
     const m = s.m;

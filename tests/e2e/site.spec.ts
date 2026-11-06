@@ -269,18 +269,41 @@ test.describe('6. Command palette and tools', () => {
     await page.keyboard.press('Escape')
   })
 
-  test('"How this site is hosted" documents AWS Amplify and links to the repo (palette and terminal)', async ({ page }) => {
+  test('Built on AWS overlay opens from the header and the terminal, links to the repo and closes cleanly', async ({ page }) => {
     await boot(page)
-    await run(page, 'hosted')
-    await expect(page.locator('#ov .aws-node')).toHaveCount(4)
-    await expect(page.locator('#ov')).toContainText('AWS Amplify')
-    await expect(page.locator('#ov .aws-code')).toContainText('baseDirectory')
-    await expect(page.locator('#ov a[href="https://github.com/dheerukarra/dheeraj-aws-portfolio"]')).toBeVisible()
+    await page.locator('#awb').click()
+    await expect(page.locator('#deploy.on')).toBeVisible()
+    await expect(page.locator('#deploy')).toContainText('AWS')
+    await expect(page.locator('#deploy a[href="https://github.com/dheerukarra/dheeraj-aws-portfolio"]')).toBeVisible()
+    expect(await page.evaluate(() => (window as any).__paused)).toBe(true)
     await page.keyboard.press('Escape')
-    await expect(page.locator('#ov')).not.toHaveClass(/on/)
+    await expect(page.locator('#deploy')).toBeHidden()
+    expect(await page.evaluate(() => (window as any).__paused)).toBe(false)
     await page.keyboard.press('~')
     await page.locator('#tcmd').fill('aws'); await page.keyboard.press('Enter')
-    await expect(page.locator('#ov')).toContainText('us-east-1')
+    await expect(page.locator('#deploy.on')).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(page.locator('#deploy')).toBeHidden()
+  })
+
+  test('model card overlay: opens from the header and #about/#superpowers/#projects, reads as text, closes cleanly', async ({ page }) => {
+    await boot(page)
+    await page.locator('#mcb').click()
+    await expect(page.locator('#story.on')).toBeVisible()
+    await expect(page.locator('#sy-text')).toBeHidden()
+    await page.locator('#sy-read').click()
+    await expect(page.locator('#sy-text')).toBeVisible()
+    for (const id of ['about', 'superpowers', 'projects']) await expect(page.locator('#sy-text #' + id)).toBeAttached()
+    await expect(page.locator('#sy-text')).toContainText('every number in it is simulated')
+    await page.keyboard.press('Escape')
+    await expect(page.locator('#story')).toBeHidden({ timeout: 10_000 })
+    expect(await page.evaluate(() => (window as any).__paused)).toBe(false)
+    for (const h of ['about', 'superpowers', 'projects']) {
+      await page.evaluate((x) => { location.hash = x }, h)
+      await expect(page.locator('#story.on')).toBeVisible()
+      await page.keyboard.press('Escape')
+      await expect(page.locator('#story')).toBeHidden({ timeout: 10_000 })
+    }
   })
 
   test('header GitHub link points at the repo', async ({ page }) => {
