@@ -19,8 +19,8 @@ const COMMITS = [
   ['c05', '05/2027 planned', 'HEAD', 'feat: M.S. Data Science and AI at University of Central Missouri (in progress)', [1, 1, 1, 1, 1, 1], 'Now: AI agents directed with constraints and audits. Kalshi rebuilt as a simulator. shorts-engine, a six-agent proof-first pipeline.'],
   ['c04', '05/2025', '', 'chore: wrap up automation testing roles', [1, 0, 0, 1, 1, 0], 'Two years of automation testing behind him.'],
   ['c03', '12/2024', '', 'feat: join VSquare IT Inc. as Automation Tester', [1, 0, 0, 1, 1, 0], 'Java, Selenium WebDriver, regression and smoke testing, JIRA.'],
-  ['c02', '12/2023', '', 'feat: B.S. Computer Science, cum laude, 3.51 GPA, Dean’s List', [1, 0, 0, 1, 1, 0], 'University of Central Missouri.'],
-  ['c01', '02/2023', '', 'feat: join ICloud Technologies as Automation Tester', [0, 0, 0, 1, 1, 0], 'Manual and automated testing, Selenium, Cypress, smoke tests.'],
+  ['c02', '02/2024', '', 'feat: join ICloud Technologies as Automation Tester', [1, 0, 0, 1, 1, 0], 'Manual and automated testing, Selenium, Cypress, smoke tests.'],
+  ['c01', '12/2023', '', 'feat: B.S. Computer Science, cum laude, 3.51 GPA, Dean’s List', [1, 0, 0, 0, 0, 0], 'University of Central Missouri.'],
 ];
 export function gitLog(app) {
   const rows = COMMITS.map((c, i) => {
@@ -41,8 +41,8 @@ export function patchNotes() {
   const R = [
     ['v3.0', '05/2027', 'planned', ['Added: M.S. Data Science and AI complete']],
     ['v2.0', 'now', 'Data and AI', ['Added: AI agents, directed with constraints, audits and regression checks', 'Added: Kalshi trading system, rebuilt as a simulator (numbers are simulated)', 'Added: shorts-engine, six agents, proof-first', 'Changed: now builds with PyTorch and Python']],
-    ['v1.5', '12/2023', '', ['Added: B.S. Computer Science, cum laude, 3.51 GPA']],
-    ['v1.0', '02/2023', 'Automation Tester', ['Added: Selenium, Cypress, TestNG, Postman, JIRA', 'Fixed: regressions, before they shipped']],
+    ['v1.5', '02/2024', 'Automation Tester', ['Added: Selenium, Cypress, TestNG, Postman, JIRA', 'Fixed: regressions, before they shipped']],
+    ['v1.0', '12/2023', '', ['Added: B.S. Computer Science, cum laude, 3.51 GPA']],
   ];
   const html = R.map((r, i) => `<section class="pn${i === 1 ? ' cur' : ''}"><div class="pn-h"><span class="pn-v">${r[0]}</span><i>${r[1]}</i>${r[2] ? `<u>${esc(r[2])}</u>` : ''}</div><ul>${r[3].map((t) => { const [k, ...v] = t.split(': '); return `<li><em class="t-${k.toLowerCase()}">${k}</em><span>${esc(v.join(': '))}</span></li>`; }).join('')}</ul></section>`).join('');
   overlay('What changed in the model', `<div class="patch">${html}</div>`, false, 'Patch notes');
