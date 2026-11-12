@@ -17,7 +17,7 @@ export const closeOverlay = () => $('#ov')?.classList.remove('on');
 // ---------------------------------------------------------------- career as a git repo
 const COMMITS = [
   ['c05', '05/2027 planned', 'HEAD', 'feat: M.S. Data Science and AI at University of Central Missouri (in progress)', [1, 1, 1, 1, 1, 1], 'Now: AI agents directed with constraints and audits. Kalshi rebuilt as a simulator. shorts-engine, a six-agent proof-first pipeline.'],
-  ['c04', '05/2025', '', 'chore: wrap up automation testing roles', [1, 0, 0, 1, 1, 0], 'Two years of automation testing behind him.'],
+  ['c04', '05/2025', '', 'chore: wrap up automation testing roles', [1, 0, 0, 1, 1, 0], 'About a year and a half of automation testing behind him.'],
   ['c03', '12/2024', '', 'feat: join VSquare IT Inc. as Automation Tester', [1, 0, 0, 1, 1, 0], 'Java, Selenium WebDriver, regression and smoke testing, JIRA.'],
   ['c02', '02/2024', '', 'feat: join ICloud Technologies as Automation Tester', [1, 0, 0, 1, 1, 0], 'Manual and automated testing, Selenium, Cypress, smoke tests.'],
   ['c01', '12/2023', '', 'feat: B.S. Computer Science, cum laude, 3.51 GPA, Dean’s List', [1, 0, 0, 0, 0, 0], 'University of Central Missouri.'],

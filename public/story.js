@@ -27,7 +27,7 @@ function drawCard(c) {
   const g = c.createLinearGradient(64, 0, TW - 64, 0); g.addColorStop(0, '#ff6a1f'); g.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(64, 692, TW - 128, 4);
   const label = (t, col, y) => { c.font = mono(26); c.fillStyle = col; c.fillText(t, 64, y); };
   label('ABOUT ME', '#5ec8ff', 756); c.font = body(36); c.fillStyle = '#e4e6ee';
-  c.fillText('M.S. Data Science and AI, UCM', 64, 806); c.fillText('B.S. Computer Science, cum laude, 3.51 GPA', 64, 852); c.fillText('2 years of automation testing', 64, 898);
+  c.fillText('M.S. Data Science and AI, UCM', 64, 806); c.fillText('B.S. Computer Science, cum laude, 3.51 GPA', 64, 852); c.fillText('1.5 years of automation testing', 64, 898);
   label('SUPERPOWERS', '#ff6a1f', 980); let x = 64; for (const [t, col] of [['AI coding', '#a58bff'], ['Testing', '#7bd88f'], ['Data and ML', '#5ec8ff'], ['Java and SQL', '#f4c95d']]) x += chip(c, t, x, 1040, col, 27);
   label('PROJECTS', '#a58bff', 1130); c.font = body(36); c.fillStyle = '#e4e6ee'; c.fillText('Kalshi trading system', 64, 1182); c.fillText('shorts-engine', 64, 1232);
   chip(c, 'SIMULATED', 520, 1182, '#f4c95d', 22);

@@ -17,7 +17,7 @@ export const CL = [
     html: "<span class=\"hd\">Kalshi</span>\nPrediction-market trading bot built by directing AI agents\n\n<span class=\"hd\">shorts-engine</span>\nAutomated vertical video where every claim has a source",
     hint: 'Drag to spin · click a half of the globe to step inside', tags: [] },
   { id: 'qa', n: '04', name: 'Testing', col: 0x7bd88f, css: '#7bd88f', dir: [0, 0, -1],
-    body: 'Two years as an automation tester at VSquare IT and ICloud Technologies. Java, Selenium, Cypress, TestNG, Postman and JIRA. The discipline behind everything else.',
+    body: 'About a year and a half as an automation tester at VSquare IT and ICloud Technologies. Java, Selenium, Cypress, TestNG, Postman and JIRA. The discipline behind everything else.',
     hint: 'Click to trigger a regression run', tags: ['Selenium', 'Cypress', 'TestNG', 'Postman', 'JIRA'] },
   { id: 'sk', n: '05', name: 'Skills and certifications', col: 0xf4c95d, css: '#f4c95d', dir: [0, 1, 0],
     body: 'Skills: 41 skills. Certifications: 4 completed courses.',

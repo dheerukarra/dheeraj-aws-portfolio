@@ -255,7 +255,7 @@ cv.addEventListener('pointerup', (e) => {
 const boot = $('boot'); let booted = false, igniteT = 9, typer = null;
 const nameEl = $('name'), letters = splitName(nameEl), kin = kinetic(letters);
 buildTape($('tape'));
-const BOOT = [['> dheeraj.model --load', 'hd'], ['  ✓ education    M.S. Data Science and AI · UCM · 05/2027', 'ok'], ['  ✓ experience   2 years automation testing', 'ok'], ['  ✓ systems      2 agent systems built', 'ok'], ['  ✓ regions      data science and AI · agents · projects · testing', 'ok'], ['> training from scratch...', 'hd']];
+const BOOT = [['> dheeraj.model --load', 'hd'], ['  ✓ education    M.S. Data Science and AI · UCM · 05/2027', 'ok'], ['  ✓ experience   1.5 years automation testing', 'ok'], ['  ✓ systems      2 agent systems built', 'ok'], ['  ✓ regions      data science and AI · agents · projects · testing', 'ok'], ['> training from scratch...', 'hd']];
 function assemble() {
   const t = performance.now() / 1000;
   for (const s of shards) { const d = new THREE.Vector3(rs(), rs(), rs()).normalize().multiplyScalar(7 + Math.random() * 9); s.m.position.copy(s.home).add(d); s.vel.set(0, 0, 0); s.ang.set(rs() * 8, rs() * 8, rs() * 8); s.free = true; s.delay = t + 0.2 + Math.random() * 1.6 + s.home.y * 0.12; }
